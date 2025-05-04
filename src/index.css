@@ -1,0 +1,319 @@
+/* Import Google Fonts first */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Then include Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 258 90% 74%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 258 90% 74%;
+
+    --radius: 0.5rem;
+    
+    /* Cosmic Theme Colors */
+    --cosmos-stardust: 258 90% 74%;
+    --cosmos-nebula: 210 90% 45%;
+    --cosmos-aurora: 170 90% 45%;
+    --cosmos-solar: 35 90% 55%;
+    --cosmos-nova: 300 90% 60%;
+  }
+
+  /* Deep Space Theme (Default) */
+  .theme-deepspace {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    --primary: 258 90% 74%;
+    --ring: 258 90% 74%;
+    --cosmos-highlight: 258 90% 74%;
+  }
+
+  /* Nebula Theme */
+  .theme-nebula {
+    --background: 225 70% 3%;
+    --foreground: 213 31% 91%;
+    --primary: 210 90% 45%;
+    --ring: 210 90% 45%;
+    --cosmos-highlight: 210 90% 45%;
+  }
+
+  /* Emerald Galaxy Theme */
+  .theme-emerald {
+    --background: 223 70% 3%;
+    --foreground: 213 31% 91%;
+    --primary: 160 84% 39%;
+    --ring: 160 84% 39%;
+    --cosmos-highlight: 160 84% 39%;
+  }
+
+  /* Ultraviolet Theme */
+  .theme-ultraviolet {
+    --background: 280 70% 5%;
+    --foreground: 213 31% 91%;
+    --primary: 300 90% 60%;
+    --ring: 300 90% 60%;
+    --cosmos-highlight: 300 90% 60%;
+  }
+
+  /* Solar Theme (Light) */
+  .theme-solar {
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 30 95% 55%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 72.22% 50.59%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 30 95% 55%;
+    --cosmos-highlight: 30 95% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans overflow-hidden;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  #root {
+    height: 100%;
+  }
+}
+
+.hover-glow:hover {
+  filter: drop-shadow(0 0 5px hsl(var(--primary)));
+}
+
+.cosmic-glow {
+  box-shadow: 0 0 15px 2px hsla(var(--primary), 0.3);
+}
+
+.btn-glow {
+  box-shadow: 0 0 10px 1px hsla(var(--primary), 0.3);
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 15px 3px hsla(var(--primary), 0.4);
+}
+
+.nebula-glow {
+  box-shadow: 0 0 15px 2px hsla(var(--cosmos-nebula), 0.3);
+}
+
+.nova-glow {
+  box-shadow: 0 0 15px 2px hsla(var(--cosmos-nova), 0.3);
+}
+
+.solar-glow {
+  box-shadow: 0 0 15px 2px hsla(var(--cosmos-solar), 0.3);
+}
+
+.star {
+  background-color: white;
+  border-radius: 50%;
+  opacity: 0.7;
+  position: absolute;
+}
+
+.star-small {
+  width: 1px;
+  height: 1px;
+}
+
+.star-medium {
+  width: 2px;
+  height: 2px;
+}
+
+.star-large {
+  width: 3px;
+  height: 3px;
+  box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.3);
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Markdown content styling */
+.markdown-content {
+  @apply text-foreground;
+}
+
+.markdown-content h1 {
+  @apply text-2xl font-bold mb-4;
+}
+
+.markdown-content h2 {
+  @apply text-xl font-bold mb-3;
+}
+
+.markdown-content h3 {
+  @apply text-lg font-bold mb-2;
+}
+
+.markdown-content p {
+  @apply mb-4;
+}
+
+.markdown-content ul {
+  @apply list-disc pl-5 mb-4;
+}
+
+.markdown-content ol {
+  @apply list-decimal pl-5 mb-4;
+}
+
+.markdown-content a {
+  @apply text-primary hover:underline;
+}
+
+.markdown-content blockquote {
+  @apply pl-4 border-l-4 border-primary/50 italic my-4;
+}
+
+.markdown-content pre {
+  @apply bg-muted p-4 rounded-md overflow-x-auto my-4;
+}
+
+.markdown-content code {
+  @apply bg-muted px-1 py-0.5 rounded;
+}
+
+/* Custom button variant for cosmic theme */
+.btn-cosmic {
+  @apply bg-gradient-to-r from-primary to-primary/70 text-white hover:from-primary/90 hover:to-primary transition-all shadow-lg;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}
+
+/* Add this new component for cosmic button variant */
+@layer components {
+  .btn-variant-cosmic {
+    @apply bg-gradient-to-r from-primary to-primary/80 text-white hover:from-primary hover:to-primary/70 transition-all shadow-md hover:shadow-lg hover:shadow-primary/20;
+  }
+}

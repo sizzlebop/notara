@@ -1,0 +1,30 @@
+name = "notara"
+main = "./dist/index.html"
+compatibility_date = "2023-01-01"
+
+# Production environment
+[env.production]
+workers_dev = false
+route = "notara.yourdomain.com/*"  # Replace with your actual domain
+
+# Development environment
+[env.development]
+workers_dev = true
+
+# Build configuration
+[build]
+command = "npm run build"
+output_dir = "dist"
+
+# Environment variables that can be accessed at build time
+[vars]
+VITE_APP_ENV = "production"
+
+# Secrets (add these using `wrangler secret put VITE_SUPABASE_URL` and `wrangler secret put VITE_SUPABASE_ANON_KEY`)
+# DO NOT put actual secrets in this file, use the secret commands above instead
+# [secrets]
+VITE_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY
+VITE_GITHUB_CLIENT_ID
+VITE_GITHUB_CLIENT_SECRET
+VITE_APP_URL
