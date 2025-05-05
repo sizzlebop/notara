@@ -1,30 +1,25 @@
 name = "notara"
-main = "./dist/index.html"
 compatibility_date = "2023-01-01"
 
-# Production environment
-[env.production]
-workers_dev = false
-route = "notara.yourdomain.com/*"  # Replace with your actual domain
-
-# Development environment
-[env.development]
-workers_dev = true
-
-# Build configuration
-[build]
-command = "npm run build"
-output_dir = "dist"
+# Pages settings
+pages_build_output_dir = "dist"
 
 # Environment variables that can be accessed at build time
 [vars]
 VITE_APP_ENV = "production"
 
+# Production environment
+[env.production.vars]
+VITE_APP_ENV = "production"
+
+# Preview environment for Pages
+[env.preview.vars]
+VITE_APP_ENV = "development"
+
 # Secrets (add these using `wrangler secret put VITE_SUPABASE_URL` and `wrangler secret put VITE_SUPABASE_ANON_KEY`)
 # DO NOT put actual secrets in this file, use the secret commands above instead
 # [secrets]
-VITE_SUPABASE_URL
-VITE_SUPABASE_ANON_KEY
-VITE_GITHUB_CLIENT_ID
-VITE_GITHUB_CLIENT_SECRET
-VITE_APP_URL
+VITE_SUPABASE_URL = "https://gvaatlzuyuegugjnjbyc.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd2YWF0bHp1eXVlZ3Vnam5qYnljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyOTE3NzgsImV4cCI6MjA2MTg2Nzc3OH0.Mqk_-HtekDB2GtpgqGaQuKJf_UC4a4s99FBNXqnHoFU"
+VITE_GITHUB_CLIENT_ID = "Ov23liGAxsrpeOlNMlnr"
+VITE_GITHUB_CLIENT_SECRET = "d28c257bae26fc99bb6f7f20664f452f8eab2966"

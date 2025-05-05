@@ -34,12 +34,6 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                 <Menu className="h-5 w-5" />
               </Button>
             )}
-            <div className="flex items-center">
-              <div className="mr-2 h-8 w-8 rounded-full overflow-hidden bg-gradient-to-br from-cosmos-nebula to-cosmos-stardust cosmic-glow flex items-center justify-center">
-                <img src="/logo.png" alt="Notara Logo" className="w-full h-full object-cover" />
-              </div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-cosmos-nebula bg-clip-text text-transparent">Notara</h1>
-            </div>
           </div>
           
           <div className="flex items-center gap-3">

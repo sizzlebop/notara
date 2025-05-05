@@ -1,7 +1,6 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useNotes } from '@/context/NotesContext';
+import { useNotes } from '@/context/NotesContextTypes';
 import AppLayout from '@/components/layout/AppLayout';
 import NoteEditor from '@/components/notes/NoteEditor';
 import { Note } from '@/types';

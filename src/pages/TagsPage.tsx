@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { useNotes } from '@/context/NotesContext';
+import { useNotes } from '@/context/NotesContextTypes';
 import { Button } from '@/components/ui/button';
 import { 
   Dialog, 

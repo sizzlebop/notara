@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { 
   FileText, Tag, Star, Image, MessageSquare, 
   Calendar, ChevronLeft, Plus, Settings, ArrowUpRight, 
-  LogIn, User, LogOut, UserCircle, Github
+  LogIn, User, LogOut, UserCircle, Github, FileCode
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
@@ -99,37 +99,61 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
     <aside
       className={cn(
         "fixed top-0 left-0 z-40 h-screen transition-all duration-300 border-r border-border/30 backdrop-blur-md bg-card/80",
-        isOpen ? "w-64" : "w-0"
+        isOpen ? "w-64" : "w-16"
       )}
     >
-      <div className={cn("h-full flex flex-col", !isOpen && "opacity-0")}>
-        <div className="flex items-center justify-between p-4 border-b border-border/30">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-cosmos-nebula to-cosmos-stardust cosmic-glow flex items-center justify-center">
-              <img src="/logo.png" alt="Notara Logo" className="w-full h-full object-cover" />
-            </div>
-            <h2 className="text-xl font-bold bg-gradient-to-r from-primary to-cosmos-nebula bg-clip-text text-transparent">Notara</h2>
-          </div>
-          <Button
-            onClick={() => setIsOpen(false)}
-            variant="ghost"
-            size="icon"
-            className="rounded-full hover:bg-secondary/50 transition-colors hover:scale-105"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
+      <div className={cn("h-full flex flex-col", !isOpen && "items-center")}>
+        <div className="flex items-center justify-between p-4 border-b border-border/30 w-full">
+          {isOpen ? (
+            <>
+              <Link to="/" className="flex items-center space-x-5">
+                <div className="w-12 h-12 square-full bg-gradient-to-br from-cosmos-nebula to-cosmos-stardust cosmic-glow flex items-center justify-center">
+                  <img src="/logo.png" alt="Notara Logo" className="w-16 h-16 object-cover glow-sm shadow-sm" />
+                </div>
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-cosmos-nebula bg-clip-text text-transparent">Notara</h2>
+              </Link>
+              <Button
+                onClick={() => setIsOpen(false)}
+                variant="ghost"
+                size="icon"
+                className="rounded-full hover:bg-secondary/50 transition-colors hover:scale-105"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={() => setIsOpen(true)}
+              variant="ghost"
+              size="icon"
+              className="rounded-full hover:bg-secondary/50 transition-colors hover:scale-105"
+              >
+            </Button>
+          )}
         </div>
         
-        <div className="p-3">
-          <Button
-            className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md 
-                     bg-primary hover:bg-primary/90 transition-all duration-300 btn-glow
-                     hover:translate-y-[-2px] hover:shadow-lg"
-          >
-            <Plus className="w-4 h-4" />
-            <span>New Note</span>
-          </Button>
-        </div>
+        {isOpen ? (
+          <div className="p-6">
+            <Button
+              className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md 
+                       bg-primary hover:bg-primary/90 transition-all duration-300 btn-glow
+                       hover:translate-y-[-2px] hover:shadow-lg"
+            >
+              <Plus className="w-4 h-4" />
+              <span>New Note</span>
+            </Button>
+          </div>
+        ) : (
+          <div className="p-3">
+            <Button
+              className="w-10 h-10 flex items-center justify-center rounded-full 
+                       bg-primary hover:bg-primary/90 transition-all duration-300 btn-glow
+                       hover:translate-y-[-2px] hover:shadow-lg"
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
         
         <nav className="flex-1 overflow-y-auto px-3 py-2">
           <div className="space-y-1">
@@ -144,19 +168,22 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover-grow group",
                     isActive 
                       ? "bg-primary/20 text-primary border-gradient" 
-                      : "hover:bg-secondary/30 hover:text-primary"
+                      : "hover:bg-secondary/30 hover:text-primary",
+                    !isOpen && "justify-center px-2"
                   )}
                 >
                   <item.icon className={cn(
                     "w-5 h-5 transition-all",
                     isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary"
                   )} />
-                  <span className={cn(
-                    "font-medium transition-all",
-                    isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary"
-                  )}>{item.name}</span>
+                  {isOpen && (
+                    <span className={cn(
+                      "font-medium transition-all",
+                      isActive ? "text-primary" : "text-muted-foreground group-hover:text-primary"
+                    )}>{item.name}</span>
+                  )}
                   
-                  {isActive && (
+                  {isActive && isOpen && (
                     <div className="ml-auto w-2 h-2 rounded-full bg-primary animate-pulse" />
                   )}
                 </Link>
@@ -164,32 +191,62 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
             })}
           </div>
 
-          <div className="mt-6 pt-6 border-t border-border/30">
-            <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Quick Access
-            </div>
+          <div className={cn("mt-6 pt-6 border-t border-border/30", !isOpen && "flex flex-col items-center")}>
+            {isOpen && (
+              <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Quick Access
+              </div>
+            )}
             <Link
-              to="#"
-              className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-secondary/30 hover:text-primary hover-grow"
+              to="/starred"
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-secondary/30 hover:text-primary hover-grow",
+                !isOpen && "justify-center px-2"
+              )}
             >
               <Star className="w-5 h-5 text-cosmos-solar" />
-              <span className="text-muted-foreground group-hover:text-primary">Starred Notes</span>
+              {isOpen && <span className="text-muted-foreground group-hover:text-primary">Starred Notes</span>}
             </Link>
             <Link
               to="/settings"
-              className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-secondary/30 hover:text-primary hover-grow"
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-secondary/30 hover:text-primary hover-grow",
+                !isOpen && "justify-center px-2"
+              )}
             >
               <Settings className="w-5 h-5 text-muted-foreground" />
-              <span className="text-muted-foreground group-hover:text-primary">Settings</span>
+              {isOpen && <span className="text-muted-foreground group-hover:text-primary">Settings</span>}
+            </Link>
+            <Link
+              to="/markdown-cheatsheet"
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-secondary/30 hover:text-primary hover-grow",
+                !isOpen && "justify-center px-2",
+                location.pathname === '/markdown-cheatsheet' && "bg-primary/20 text-primary border-gradient"
+              )}
+            >
+              <FileCode className={cn(
+                "w-5 h-5",
+                location.pathname === '/markdown-cheatsheet' ? "text-primary" : "text-muted-foreground"
+              )} />
+              {isOpen && (
+                <span className={cn(
+                  "text-muted-foreground group-hover:text-primary",
+                  location.pathname === '/markdown-cheatsheet' && "text-primary"
+                )}>Markdown Cheatsheet</span>
+              )}
             </Link>
           </div>
         </nav>
         
-        <div className="p-4 border-t border-border/30">
+        <div className={cn("p-4 border-t border-border/30", !isOpen && "w-full flex justify-center")}>
           {isAuthenticated ? (
             <DropdownMenu open={profileMenuOpen} onOpenChange={setProfileMenuOpen}>
               <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-3 p-2 rounded-xl bg-secondary/20 hover:bg-secondary/30 transition-all cursor-pointer glass-card">
+                <div className={cn(
+                  "flex items-center gap-3 p-2 rounded-xl bg-secondary/20 hover:bg-secondary/30 transition-all cursor-pointer glass-card",
+                  !isOpen && "justify-center p-2 w-10 h-10"
+                )}>
                   <Avatar className="h-10 w-10 cosmic-glow">
                     {user?.user_metadata?.avatar_url ? (
                       <AvatarImage src={user.user_metadata.avatar_url} alt={getDisplayName()} />
@@ -199,15 +256,19 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                       </AvatarFallback>
                     )}
                   </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium truncate">{getDisplayName()}</div>
-                    {user?.email && (
-                      <div className="text-xs text-muted-foreground truncate">{user.email}</div>
-                    )}
-                  </div>
-                  <div className="rounded-full p-1 hover:bg-secondary/50 transition-colors">
-                    <ArrowUpRight className="h-4 w-4" />
-                  </div>
+                  {isOpen && (
+                    <>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium truncate">{getDisplayName()}</div>
+                        {user?.email && (
+                          <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                        )}
+                      </div>
+                      <div className="rounded-full p-1 hover:bg-secondary/50 transition-colors">
+                        <ArrowUpRight className="h-4 w-4" />
+                      </div>
+                    </>
+                  )}
                 </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 backdrop-blur-md bg-card/90 border-border/50">
@@ -239,7 +300,10 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <div 
-                  className="flex items-center gap-3 p-2 rounded-xl bg-secondary/20 hover:bg-secondary/30 transition-all cursor-pointer glass-card"
+                  className={cn(
+                    "flex items-center gap-3 p-2 rounded-xl bg-secondary/20 hover:bg-secondary/30 transition-all cursor-pointer glass-card",
+                    !isOpen && "justify-center p-2 w-10 h-10"
+                  )}
                   onClick={handleAuth}
                 >
                   <Avatar className="h-10 w-10">
@@ -247,13 +311,17 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
                       <LogIn className="h-5 w-5" />
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium truncate">Sign In</div>
-                    <div className="text-xs text-muted-foreground truncate">Access your notes</div>
-                  </div>
-                  <div className="rounded-full p-1 hover:bg-secondary/50 transition-colors">
-                    <LogIn className="h-4 w-4" />
-                  </div>
+                  {isOpen && (
+                    <>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium truncate">Sign In</div>
+                        <div className="text-xs text-muted-foreground truncate">Access your notes</div>
+                      </div>
+                      <div className="rounded-full p-1 hover:bg-secondary/50 transition-colors">
+                        <LogIn className="h-4 w-4" />
+                      </div>
+                    </>
+                  )}
                 </div>
               </TooltipTrigger>
               <TooltipContent>

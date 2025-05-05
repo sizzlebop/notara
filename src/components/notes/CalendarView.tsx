@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
-import { useNotes } from '@/context/NotesContext';
+import { useNotes } from '@/context/NotesContextTypes';
 import { format } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { CalendarIcon, Clock } from 'lucide-react';
-import { v4 as uuidv4 } from 'uuid';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { cn } from '@/lib/utils';
 
 const CalendarView: React.FC = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -53,8 +53,8 @@ const CalendarView: React.FC = () => {
   };
   
   return (
-    <div className="flex flex-col h-full p-4 space-y-4">
-      <div className="flex justify-between items-center">
+    <div className="flex flex-col h-full p-4 space-y-4 overflow-x-hidden">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold flex items-center gap-2">
           <CalendarIcon className="h-5 w-5 text-primary" />
           Calendar
@@ -65,42 +65,42 @@ const CalendarView: React.FC = () => {
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100%-3rem)] overflow-hidden">
-        <div className="bg-card/50 p-6 rounded-lg border border-border/50 backdrop-blur-sm shadow-lg cosmic-glow h-full flex flex-col">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            className="w-full max-w-full"
-            classNames={{
-              months: "flex flex-col sm:flex-row space-y-4 sm:space-x-8 sm:space-y-0",
-              month: "space-y-6 w-full",
-              caption: "flex justify-center pt-2 pb-1 relative items-center",
-              caption_label: "text-base font-medium",
-              nav: "space-x-2 flex items-center",
-              nav_button: "h-8 w-8 bg-primary/10 rounded-full hover:bg-primary/20 transition-colors",
-              table: "w-full border-collapse space-y-2",
-              head_row: "flex w-full",
-              head_cell: "text-muted-foreground rounded-md w-10 h-10 font-normal text-sm",
-              row: "flex w-full mt-3",
-              cell: "h-10 w-10 text-center text-sm relative [&:has([aria-selected])]:bg-primary/20 rounded-full",
-              day: "h-10 w-10 p-0 font-normal aria-selected:opacity-100 rounded-full",
-              day_selected: "bg-primary text-white hover:bg-primary hover:text-white",
-              day_today: "bg-accent text-accent-foreground",
-            }}
-          />
-          
-          <div className="mt-6 text-center">
-            <h3 className="text-lg font-medium">
-              {date ? format(date, 'MMMM d, yyyy') : 'Select a date'}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              Click on a date to view or add events
-            </p>
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="h-[calc(100%-3rem)] w-full"
+      >
+        <ResizablePanel 
+          defaultSize={45} 
+          minSize={40}
+          className="bg-card/50 rounded-lg border border-border/50 backdrop-blur-sm shadow-lg cosmic-glow min-w-[400px]"
+        >
+          <div className="p-4 h-full flex flex-col items-center pt-8">
+            <div className="calendar-wrapper w-full max-w-[380px]">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className={cn(
+                  "mx-auto border-none bg-transparent",
+                  "w-full [&_.rdp-caption]:text-xl [&_.rdp-caption]:font-semibold"
+                )}
+              />
+              
+              <div className="text-center mt-6">
+                <h3 className="text-xl font-medium">
+                  {date ? format(date, 'MMMM d, yyyy') : 'Select a date'}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Click on a date to view or add events
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
+        </ResizablePanel>
         
-        <div className="flex-1 overflow-y-auto bg-card/30 rounded-lg p-4 border border-border/50 flex flex-col">
+        <ResizableHandle withHandle className="bg-border/30 hover:bg-primary/50 transition-colors" />
+        
+        <ResizablePanel defaultSize={55} className="bg-card/30 rounded-lg p-4 border border-border/50 flex flex-col min-w-[300px]">
           <h3 className="text-md font-semibold mb-3 px-2">
             {date ? `Events for ${format(date, 'MMMM d, yyyy')}` : 'Select a date'}
           </h3>
@@ -144,8 +144,8 @@ const CalendarView: React.FC = () => {
               </Button>
             </div>
           )}
-        </div>
-      </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
       
       <Dialog open={isAddingEvent} onOpenChange={setIsAddingEvent}>
         <DialogContent className="sm:max-w-md">

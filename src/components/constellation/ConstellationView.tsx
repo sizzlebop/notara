@@ -1,6 +1,5 @@
-
 import React, { useEffect, useRef, useState } from 'react';
-import { useNotes } from '@/context/NotesContext';
+import { useNotes } from '@/context/NotesContextTypes';
 import { Note, NoteTag } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/hooks/use-toast';

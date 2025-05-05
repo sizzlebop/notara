@@ -1,23 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Note, NoteTag, MoodBoard } from '../types';
-
-interface NotesContextType {
-  notes: Note[];
-  tags: NoteTag[];
-  moodBoards: MoodBoard[];
-  activeNote: Note | null;
-  addNote: (note: Partial<Note>) => Note;
-  updateNote: (id: string, note: Partial<Note>) => void;
-  deleteNote: (id: string) => void;
-  addTag: (tag: Partial<NoteTag>) => void;
-  updateTag: (id: string, tag: Partial<NoteTag>) => void;
-  deleteTag: (id: string) => void;
-  setActiveNote: (note: Note | null) => void;
-  addMoodBoard: (moodBoard: Partial<MoodBoard>) => MoodBoard;
-  updateMoodBoard: (id: string, moodBoard: Partial<MoodBoard>) => void;
-  deleteMoodBoard: (id: string) => void;
-}
+import { NotesContext } from './NotesContextTypes';
 
 const defaultTags: NoteTag[] = [
   { id: '1', name: 'Personal', color: '#9b87f5' },
@@ -120,8 +104,6 @@ const defaultMoodBoards: MoodBoard[] = [
     ]
   }
 ];
-
-export const NotesContext = createContext<NotesContextType | undefined>(undefined);
 
 export const NotesProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   const [notes, setNotes] = useState<Note[]>(
@@ -252,12 +234,4 @@ export const NotesProvider: React.FC<{children: React.ReactNode}> = ({ children 
       {children}
     </NotesContext.Provider>
   );
-};
-
-export const useNotes = () => {
-  const context = useContext(NotesContext);
-  if (context === undefined) {
-    throw new Error('useNotes must be used within a NotesProvider');
-  }
-  return context;
 };

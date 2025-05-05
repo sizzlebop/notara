@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { useNotes } from '@/context/NotesContext';
+import { useNotes } from '@/context/NotesContextTypes';
 import { MoodBoardItem } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { Button } from '@/components/ui/button';
@@ -113,49 +112,104 @@ const MoodBoard: React.FC<MoodBoardProps> = ({ id }) => {
   
   return (
     <div 
-      className="h-full w-full relative overflow-hidden bg-cosmos-deepspace"
+      className="h-full w-full relative overflow-auto bg-cosmos-deepspace"
       onMouseMove={handleMouseMove}
       onMouseUp={handleDragEnd}
       onMouseLeave={handleDragEnd}
+      style={{ minHeight: '600px', minWidth: '100%' }}
     >
-      {/* Background stars */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(50)].map((_, i) => (
+      {/* Content container with min-width to ensure space for items */}
+      <div className="relative" style={{ minWidth: '100%', minHeight: '100%' }}>
+        {/* Background stars */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className={`star ${i % 3 === 0 ? 'star-large' : i % 3 === 1 ? 'star-medium' : 'star-small'} animate-twinkle`}
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`
+              }}
+            />
+          ))}
+        </div>
+        
+        {/* Board title */}
+        <div className="absolute top-4 left-4 z-10">
+          <h2 className="text-2xl font-bold">{moodBoard.name}</h2>
+        </div>
+        
+        {/* Control panel */}
+        <div className="absolute top-4 right-4 z-10 flex gap-2">
+          <Button
+            size="sm"
+            onClick={() => setIsAddingText(true)}
+            className="gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+            Add Text
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => setIsAddingImage(true)}
+            className="gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Add Image
+          </Button>
+        </div>
+        
+        {/* Mood board items */}
+        {moodBoard.items.map(item => (
           <div
-            key={i}
-            className={`star ${i % 3 === 0 ? 'star-large' : i % 3 === 1 ? 'star-medium' : 'star-small'} animate-twinkle`}
+            key={item.id}
+            className={`absolute cursor-move ${draggedItem === item.id ? 'z-10' : 'z-0'}`}
             style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`
+              left: `${item.position.x}px`,
+              top: `${item.position.y}px`,
+              userSelect: 'none'
             }}
-          />
+            onMouseDown={(e) => handleDragStart(e, item.id, item.position)}
+          >
+            {item.type === 'text' ? (
+              <div className="bg-card/80 backdrop-blur-sm p-4 rounded-lg shadow-md border border-border min-w-[200px] max-w-[400px]">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="w-4" />
+                  <button 
+                    className="p-1 rounded-full hover:bg-secondary/50"
+                    onClick={() => deleteItem(item.id)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+                <p className="whitespace-pre-wrap">{item.content}</p>
+              </div>
+            ) : (
+              <div className="relative">
+                <img
+                  src={item.content}
+                  alt=""
+                  style={{
+                    width: item.size?.width ?? 200,
+                    height: item.size?.height ?? 'auto'
+                  }}
+                  className="rounded-lg shadow-lg"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://via.placeholder.com/200x150?text=Image+Error';
+                  }}
+                />
+                <button 
+                  className="absolute top-1 right-1 p-1 rounded-full bg-card/80 hover:bg-secondary/50"
+                  onClick={() => deleteItem(item.id)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+            )}
+          </div>
         ))}
-      </div>
-      
-      {/* Board title */}
-      <div className="absolute top-4 left-4 z-10">
-        <h2 className="text-2xl font-bold">{moodBoard.name}</h2>
-      </div>
-      
-      {/* Control panel */}
-      <div className="absolute top-4 right-4 z-10 flex gap-2">
-        <Button
-          size="sm"
-          onClick={() => setIsAddingText(true)}
-          className="gap-2"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-          Add Text
-        </Button>
-        <Button
-          size="sm"
-          onClick={() => setIsAddingImage(true)}
-          className="gap-2"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          Add Image
-        </Button>
       </div>
       
       {/* Modal for adding text */}
@@ -217,57 +271,6 @@ const MoodBoard: React.FC<MoodBoardProps> = ({ id }) => {
           </div>
         </div>
       )}
-      
-      {/* Mood board items */}
-      {moodBoard.items.map(item => (
-        <div
-          key={item.id}
-          className={`absolute cursor-move ${draggedItem === item.id ? 'z-10' : 'z-0'}`}
-          style={{
-            left: `${item.position.x}px`,
-            top: `${item.position.y}px`,
-            userSelect: 'none'
-          }}
-          onMouseDown={(e) => handleDragStart(e, item.id, item.position)}
-        >
-          {item.type === 'text' ? (
-            <div className="bg-card/80 backdrop-blur-sm p-4 rounded-lg shadow-md border border-border min-w-[200px] max-w-[400px]">
-              <div className="flex justify-between items-center mb-2">
-                <div className="w-4" />
-                <button 
-                  className="p-1 rounded-full hover:bg-secondary/50"
-                  onClick={() => deleteItem(item.id)}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-              </div>
-              <p className="whitespace-pre-wrap">{item.content}</p>
-            </div>
-          ) : (
-            <div className="relative">
-              <img
-                src={item.content}
-                alt=""
-                style={{
-                  width: item.size?.width ?? 200,
-                  height: item.size?.height ?? 'auto'
-                }}
-                className="rounded-lg shadow-lg"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'https://via.placeholder.com/200x150?text=Image+Error';
-                }}
-              />
-              <button 
-                className="absolute top-1 right-1 p-1 rounded-full bg-card/80 hover:bg-secondary/50"
-                onClick={() => deleteItem(item.id)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-            </div>
-          )}
-        </div>
-      ))}
     </div>
   );
 };

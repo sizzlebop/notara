@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
-import { useNotes } from '@/context/NotesContext';
+import { useNotes } from '@/context/NotesContextTypes';
 import NotesList from '@/components/notes/NotesList';
 import NoteEditor from '@/components/notes/NoteEditor';
 import { Note } from '@/types';
@@ -62,12 +61,6 @@ const HomePage: React.FC = () => {
     <AppLayout>
       <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
         <div className="h-full flex flex-col">
-          <div className="p-3">
-            <div className="text-lg font-semibold px-3 mb-2 flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              Notes
-            </div>
-          </div>
           <div className="flex-1 overflow-hidden">
             <NotesList
               notes={notes}
